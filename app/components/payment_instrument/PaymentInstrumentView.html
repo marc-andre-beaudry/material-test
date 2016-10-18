@@ -1,0 +1,55 @@
+<div>
+    <md-card>
+        <md-subheader class="md-no-sticky subheader-bottom-border">User</md-subheader>
+
+        <md-card-content>
+            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                <label>User</label>
+                <md-select flex ng-model="controller.selectedUser" placeholder="User"
+                           ng-change="controller.selectedUserChanged()">
+                    <md-option ng-repeat="user in controller.users" ng-value="user">{{user.firstname}}
+                        {{user.lastname}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+        </md-card-content>
+    </md-card>
+
+    <md-card>
+        <md-subheader class="md-no-sticky subheader-bottom-border">Credit Card</md-subheader>
+
+        <md-card-content>
+            <md-input-container class="md-icon-float md-block" flex-gt-sm>
+                <label>Credit Card Owner</label>
+                <input ng-model="controller.currentPaymentInstrument.name" type="text">
+            </md-input-container>
+
+            <md-input-container class="md-icon-float md-block">
+                <label>Credit Card Number</label>
+                <input ng-model="controller.currentPaymentInstrument.number" type="text">
+            </md-input-container>
+
+            <div layout-gt-sm="row">
+                <md-input-container class="md-icon-float md-block" flex-gt-sm>
+                    <label>Expiration Month</label>
+                    <input ng-model="controller.currentPaymentInstrument.expiryMonth" type="text">
+                </md-input-container>
+
+                <md-input-container class="md-icon-float md-block" flex-gt-sm>
+                    <label>Expiration Year</label>
+                    <input ng-model="controller.currentPaymentInstrument.expiryYear" type="text">
+                </md-input-container>
+
+                <md-input-container class="md-icon-float md-block" flex-gt-sm>
+                    <label>Security Code</label>
+                    <input ng-model="controller.currentPaymentInstrument.securityCode" type="text">
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="end" flex>
+                <md-button class="md-raised md-primary">Cancel</md-button>
+                <md-button class="md-raised md-primary">Update</md-button>
+            </div>
+        </md-card-content>
+    </md-card>
+</div>

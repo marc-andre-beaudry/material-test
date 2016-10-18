@@ -1,0 +1,93 @@
+<div>
+    <md-card>
+        <md-subheader class="md-no-sticky subheader-bottom-border">Test Information</md-subheader>
+
+        <md-card-content>
+            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                <label>User</label>
+                <md-select flex ng-model="controller.selectedUser" placeholder="User"
+                           ng-change="controller.selectedUserChanged()">
+                    <md-option ng-repeat="user in controller.users" ng-value="user">{{user.firstname}}
+                        {{user.lastname}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                <label>Payment Instrument</label>
+                <md-select flex ng-model="controller.selectedPaymentInstrument" placeholder="Payment Instrument">
+                    <md-option ng-repeat="paymentInstrument in controller.paymentInstruments"
+                               ng-value="paymentInstrument">
+                        {{paymentInstrument.creditCardType}} - {{paymentInstrument.number}} - {{paymentInstrument.name}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                <label>Order Cart</label>
+                <md-select flex ng-model="controller.selectedOrderCart" placeholder="Order Cart">
+                    <md-option ng-repeat="cart in controller.orderCarts" ng-value="cart">{{cart.description}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <div layout="row" layout-align="end" flex>
+                <md-button class="md-raised md-primary" ng-click="controller.preAuthCartRedirect($event)">PreAuth Redirect</md-button>
+                <md-button class="md-raised md-primary" ng-click="controller.preAuthCart($event)">PreAuth</md-button>
+                <md-button class="md-raised md-primary" ng-click="controller.generateInvoice($event)">Invoice
+                </md-button>
+            </div>
+        </md-card-content>
+    </md-card>
+
+    <md-card ng-repeat="event in controller.events | orderBy:'-'">
+        <div ng-show="event.type === 'INVOICE_EVENT';">
+            <md-subheader class="md-no-sticky subheader-bottom-border">Invoice Event #{{event.id}}</md-subheader>
+
+            <md-card-content>
+                <label>Payload</label>
+                <md-divider></md-divider>
+                <code>{{event.payload}}</code>
+
+                <div layout="row" layout-align="end" flex>
+                    <md-button class="md-raised md-primary" ng-click="controller.payInvoice($event, event.payload.id)">
+                        Pay
+                    </md-button>
+                </div>
+            </md-card-content>
+        </div>
+        <div ng-show="event.type === 'PAYMENT_EVENT';">
+            <md-subheader class="md-no-sticky subheader-bottom-border">Payment Event #{{event.id}}</md-subheader>
+
+            <md-card-content>
+                <label>Payload</label>
+                <md-divider></md-divider>
+                <code>{{event.payload}}</code>
+
+                <div ng-show="event.payload.isSuccess" layout="row" layout-align="end" flex>
+                    <md-button class="md-raised md-primary"
+                               ng-click="controller.refundPayment($event, event.payload.id, event.payload.invoiceId)">
+                        Refund
+                    </md-button>
+                </div>
+            </md-card-content>
+        </div>
+        <div ng-show="event.type === 'REFUND_EVENT';">
+            <md-subheader class="md-no-sticky subheader-bottom-border">Refund Event #{{event.id}}</md-subheader>
+
+            <md-card-content>
+                <label>Payload</label>
+                <md-divider></md-divider>
+                <code>{{event.payload}}</code>
+            </md-card-content>
+        </div>
+        <div ng-show="event.type === 'PREAUTH_EVENT';">
+            <md-subheader class="md-no-sticky subheader-bottom-border">Preauth Cart Event #{{event.id}}</md-subheader>
+
+            <md-card-content>
+                <label>Payload</label>
+                <md-divider></md-divider>
+                <code>{{event.payload}}</code>
+            </md-card-content>
+        </div>
+    </md-card>
+</div>

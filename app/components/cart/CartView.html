@@ -1,0 +1,123 @@
+<div>
+
+    <div ng-hide="controller.currentOrderCart">
+
+        <md-card>
+            <md-subheader class="md-no-sticky subheader-bottom-border">User</md-subheader>
+
+            <md-card-content>
+                <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                    <label>User</label>
+                    <md-select flex ng-model="controller.selectedUser" placeholder="User"
+                               ng-change="controller.selectedUserChanged()">
+                        <md-option ng-repeat="user in controller.users" ng-value="user">{{user.firstname}}
+                            {{user.lastname}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </md-card-content>
+        </md-card>
+
+        <md-card ng-show="controller.selectedUser">
+            <md-subheader class="md-no-sticky subheader-bottom-border">
+                <div layout="row">Order carts</div>
+            </md-subheader>
+
+            <md-card-content>
+                <div layout="row">
+                    <div flex layout="column" layout-align="center end" class="text-center">
+                        <md-button class="md-raised md-primary" ng-click="controller.newOrderCart($event)">New Cart
+                        </md-button>
+                    </div>
+                </div>
+                <md-list>
+                    <md-divider></md-divider>
+                    <md-list-item ng-repeat="cart in controller.orderCarts">
+                        <p> {{cart.description}}</p>
+                        <md-icon class="md-secondary" ng-click="controller.editOrderCart($event, cart)">edit</md-icon>
+                        <md-icon class="md-secondary">delete</md-icon>
+                        <md-divider></md-divider>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+    </div>
+
+    <div ng-show="controller.currentOrderCart">
+        <md-card>
+            <md-subheader class="md-no-sticky subheader-bottom-border">Order Info</md-subheader>
+            <md-card-content>
+                <div class="order-info-edit-panel">
+                    <div layout="row" layout-align="center stretch">
+                        <md-input-container flex>
+                            <label>Description</label>
+                            <input ng-model="controller.currentOrderCart.description">
+                        </md-input-container>
+
+                        <md-input-container flex>
+                            <label>Currency</label>
+                            <input ng-model="controller.currentOrderCart.currency">
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <div class="order-items-edit-panel">
+                    <md-list flex>
+                        <md-subheader class="md-no-sticky">Items</md-subheader>
+
+                        <div layout="row">
+                            <div flex layout="column" layout-align="center end" class="text-center">
+                                <md-button class="md-raised md-primary"
+                                           ng-click="controller.addItemToCurrentCart($event)">New Item
+                                </md-button>
+                            </div>
+                        </div>
+
+                        <md-list-item ng-repeat="item in controller.currentOrderCart.orders[0].orderItems" layout="row"
+                                      layout-align="center stretch">
+
+                            <md-input-container flex="5">
+                                <label>Id</label>
+                                <input ng-model="item.id" disabled>
+                            </md-input-container>
+
+                            <md-input-container flex>
+                                <label>Description</label>
+                                <input ng-model="item.description">
+                            </md-input-container>
+
+                            <md-input-container flex>
+                                <label>Type</label>
+                                <md-select flex ng-model="item.type" placeholder="Type">
+                                    <md-option value="ITEM">Item</md-option>
+                                    <md-option value="TAX">Tax</md-option>
+                                    <md-option value="DISCOUNT">Discount</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <md-input-container flex>
+                                <label>Price</label>
+                                <input ng-model="item.price">
+                            </md-input-container>
+
+                            <md-icon class="md-secondary" ng-click="controller.deleteItemFromCurrentCart($event, item)">
+                                delete
+                            </md-icon>
+
+                            <md-divider></md-divider>
+                        </md-list-item>
+                    </md-list>
+                </div>
+
+                <md-divider></md-divider>
+                <div layout="row" layout-align="end" flex>
+                    <md-button class="md-raised md-primary" ng-click="controller.cancelEditOrderCart($event)">Cancel
+                    </md-button>
+                    <md-button class="md-raised md-primary" ng-click="controller.confirmEditOrderCart($event)">Update
+                    </md-button>
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+
+</div>

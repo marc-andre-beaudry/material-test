@@ -2,26 +2,27 @@ angular
     .module('payment_gateway', ['ngMaterial', 'services']);
 angular
     .module('payment_gateway')
-    .controller('PaymentGatewayController', ['PaymentGatewayService', '$log', '$q', '$mdDialog',
+    .controller('PaymentGatewayController', ['PaymentGatewayService',
         PaymentGatewayController
     ]);
 
-function PaymentGatewayController(PaymentGatewayService, $log, $q, $mdDialog) {
-    var self = this;
-    self.paymentGatewayService = PaymentGatewayService;
-    self.gateways = [];
+function PaymentGatewayController(PaymentGatewayService) {
+    var vm = this;
+    vm.paymentGatewayService = PaymentGatewayService;
+    vm.gateways = [];
 
-    self.paymentGatewayService.getPaymentServices().then(function (response) {
+    vm.paymentGatewayService.getPaymentServices().then(function (response) {
         if (response.data && response.data.length && response.data.length > 0) {
-
-            response.data.forEach(function (gateway) {
-                self.paymentGatewayService.getPaymentServiceInfo(gateway).then(
-                    function (response) {
-                        self.gateways.push({name: gateway, isConfigured:true, type:response.data.type});
-                    }, function (response) {
-                        self.gateways.push({name: gateway, isConfigured:false});
-                    });
-            });
+            response.data.forEach(vm.getPaymentGatewayInfo);
         }
-    })
+    });
+
+    vm.getPaymentGatewayInfo = function (gateway) {
+        vm.paymentGatewayService.getPaymentServiceInfo(gateway).then(
+            function (response) {
+                vm.gateways.push({name: gateway, isConfigured: true, type: response.data.type});
+            }, function (response) {
+                vm.gateways.push({name: gateway, isConfigured: false});
+            });
+    };
 }

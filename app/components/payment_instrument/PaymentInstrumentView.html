@@ -3,15 +3,7 @@
         <md-subheader class="md-no-sticky subheader-bottom-border">User</md-subheader>
 
         <md-card-content>
-            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
-                <label>User</label>
-                <md-select flex ng-model="controller.selectedUser" placeholder="User"
-                           ng-change="controller.selectedUserChanged()">
-                    <md-option ng-repeat="user in controller.users" ng-value="user">{{user.firstname}}
-                        {{user.lastname}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+            <user-picker on-select="controller.selectedUserChanged(user)"></user-picker>
         </md-card-content>
     </md-card>
 
@@ -47,7 +39,7 @@
             </div>
 
             <div layout="row" layout-align="end" flex>
-                <md-button class="md-raised md-primary">Cancel</md-button>
+                <md-button class="md-raised">Cancel</md-button>
                 <md-button class="md-raised md-primary">Update</md-button>
             </div>
         </md-card-content>

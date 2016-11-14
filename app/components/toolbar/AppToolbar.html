@@ -1,0 +1,13 @@
+<md-toolbar class="app-toolbar" layout="row">
+    <h1 class="md-toolbar-tools app-toolbar-title"><strong>Billing Integration Tester</strong></h1>
+    <md-menu>
+        <md-button aria-label="Settings" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+            <md-icon md-menu-origin>settings</md-icon>
+        </md-button>
+        <md-menu-content width="2">
+            <md-menu-item>
+                <md-button ng-click="$ctrl.loadTestData()">Load test data</md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+</md-toolbar>

@@ -7,16 +7,15 @@
             <md-card-content>
                 <div layout="row">
                     <div flex layout="column" layout-align="center end" class="text-center">
-                        <md-button class="md-raised md-primary" ng-click="controller.newUser($event)">New User</md-button>
+                        <md-button class="md-raised md-primary" ng-click="controller.newUser()">New User</md-button>
                     </div>
                 </div>
                 <md-list>
                     <md-divider></md-divider>
-                    <md-list-item ng-repeat="user in controller.users">
+                    <md-list-item ng-repeat="user in controller.users" ng-click="controller.editUser(user)">
                         <p> {{ user.firstname }} {{user.lastname}}</p>
-                        <md-icon class="md-secondary" ng-click="controller.editUser($event, user)">edit</md-icon>
-                        <md-icon class="md-secondary" ng-click="controller.deleteUser($event, user)">delete</md-icon>
-
+                        <md-icon class="md-secondary" ng-click="controller.editUser(user)">edit</md-icon>
+                        <md-icon class="md-secondary" ng-click="controller.deleteUser(user)">delete</md-icon>
                         <md-divider></md-divider>
                     </md-list-item>
                 </md-list>
@@ -99,7 +98,7 @@
 
 
                 <div layout="row" layout-align="end" flex>
-                    <md-button class="md-raised md-primary" ng-click="controller.cancelEditUser($event)">Cancel
+                    <md-button class="md-raised" ng-click="controller.cancelEditUser($event)">Cancel
                     </md-button>
                     <md-button class="md-raised md-primary" ng-click="controller.confirmEditUser($event)">Update
                     </md-button>

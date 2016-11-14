@@ -1,7 +1,7 @@
 angular.module('services')
-    .service('CartService', ['$http', '$q', CartService]);
+    .service('CartService', ['$http', CartService]);
 
-function CartService($http, $q) {
+function CartService($http) {
     return {
         getOrderCartsForUser: function (userId) {
             return $http.get('http://localhost:8091/api/v1/orderCarts?userId=' + userId);

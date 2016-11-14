@@ -1,52 +1,78 @@
 <div>
     <md-card>
-        <md-subheader class="md-no-sticky subheader-bottom-border">Test Information</md-subheader>
+        <md-subheader class="md-no-sticky subheader-bottom-border">Test Configuration</md-subheader>
 
         <md-card-content>
-            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
-                <label>User</label>
-                <md-select flex ng-model="controller.selectedUser" placeholder="User"
-                           ng-change="controller.selectedUserChanged()">
-                    <md-option ng-repeat="user in controller.users" ng-value="user">{{user.firstname}}
-                        {{user.lastname}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+            <div layout="row">
+                <div flex="50">
+                    <user-picker on-select="controller.selectedUserChanged(user)"></user-picker>
+                    <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                        <label>Payment Instrument</label>
+                        <md-select flex ng-model="controller.selectedPaymentInstrument" placeholder="Payment Instrument">
+                            <md-option ng-repeat="paymentInstrument in controller.paymentInstruments"
+                                       ng-value="paymentInstrument">
+                                <div layout="row">
+                                    <span>{{paymentInstrument.creditCardType}} {{paymentInstrument.name}} {{paymentInstrument.number}} {{paymentInstrument.expiryMonth}}/{{paymentInstrument.expiryYear}} {{paymentInstrument.securityCode}}</span>
+                                </div>
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
+                        <label>Order Cart</label>
+                        <md-select flex ng-model="controller.selectedOrderCart" placeholder="Order Cart">
+                            <md-option ng-repeat="cart in controller.orderCarts" ng-value="cart">{{cart.description}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div flex="50">
+                    <div flex="nogrow" class="event-content-card-title">Summary</div>
 
-            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
-                <label>Payment Instrument</label>
-                <md-select flex ng-model="controller.selectedPaymentInstrument" placeholder="Payment Instrument">
-                    <md-option ng-repeat="paymentInstrument in controller.paymentInstruments"
-                               ng-value="paymentInstrument">
-                        {{paymentInstrument.creditCardType}} - {{paymentInstrument.number}} - {{paymentInstrument.name}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-            <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
-                <label>Order Cart</label>
-                <md-select flex ng-model="controller.selectedOrderCart" placeholder="Order Cart">
-                    <md-option ng-repeat="cart in controller.orderCarts" ng-value="cart">{{cart.description}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+                    <div flex="100">asdasd</div>
 
-            <div layout="row" layout-align="end" flex>
-                <md-button class="md-raised md-primary" ng-click="controller.preAuthCartRedirect($event)">PreAuth Redirect</md-button>
-                <md-button class="md-raised md-primary" ng-click="controller.preAuthCart($event)">PreAuth</md-button>
-                <md-button class="md-raised md-primary" ng-click="controller.generateInvoice($event)">Invoice
-                </md-button>
+                    <div flex="nogrow" layout="row" layout-align="end end">
+                        <md-button class="md-raised md-primary" ng-click="controller.preAuthCartRedirect($event)">PreAuth Redirect</md-button>
+                        <md-button class="md-raised md-primary" ng-click="controller.preAuthCart($event)">PreAuth</md-button>
+                        <md-button class="md-raised md-primary" ng-click="controller.generateInvoice($event)">Invoice
+                        </md-button>
+                    </div>
+                </div>
             </div>
+
         </md-card-content>
     </md-card>
 
     <md-card ng-repeat="event in controller.events | orderBy:'-'">
         <div ng-show="event.type === 'INVOICE_EVENT';">
-            <md-subheader class="md-no-sticky subheader-bottom-border">Invoice Event #{{event.id}}</md-subheader>
+            <md-subheader ng-style="{'background-color':controller.getBackground(event)}" class="md-no-sticky ">
+                #{{event.id}} - {{controller.getName(event)}}
+            </md-subheader>
 
             <md-card-content>
-                <label>Payload</label>
-                <md-divider></md-divider>
-                <code>{{event.payload}}</code>
+                <div layout="row">
+                    <div flex="50">
+                        <span flex="50">Payment Id:</span>
+                        <span flex="50">{{event.payload.id ? event.payload.id  : 'Unknown' }}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="33">Amount:</span>
+                        <span flex="33">{{event.payload.amount ? event.payload.amount  : 'Unknown' }}</span>
+                        <span flex="33">{{event.payload.currency}}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="50">Method:</span>
+                        <span flex="50">{{event.payload.method ? event.payload.method  : 'Unknown' }}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="50">Is Refund:</span>
+                        <span flex="50">{{event.payload.isRefund}}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="50">Payment Authorization Id:</span>
+                        <span flex="50">{{event.payload.paymentAuthorizationId ? event.payload.paymentAuthorizationId  : 'Unknown' }}</span>
+                    </div>
+                </div>
+
 
                 <div layout="row" layout-align="end" flex>
                     <md-button class="md-raised md-primary" ng-click="controller.payInvoice($event, event.payload.id)">
@@ -56,12 +82,34 @@
             </md-card-content>
         </div>
         <div ng-show="event.type === 'PAYMENT_EVENT';">
-            <md-subheader class="md-no-sticky subheader-bottom-border">Payment Event #{{event.id}}</md-subheader>
+            <md-subheader ng-style="{'background-color':controller.getBackground(event)}" class="md-no-sticky ">
+                #{{event.id}} - {{controller.getName(event)}}
+            </md-subheader>
 
             <md-card-content>
-                <label>Payload</label>
-                <md-divider></md-divider>
-                <code>{{event.payload}}</code>
+                <div layout="row">
+                    <div flex="50">
+                        <span flex="50">Payment Id:</span>
+                        <span flex="50">{{event.payload.id ? event.payload.id  : 'Unknown' }}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="33">Amount:</span>
+                        <span flex="33">{{event.payload.amount ? event.payload.amount  : 'Unknown' }}</span>
+                        <span flex="33">{{event.payload.currency}}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="50">Method:</span>
+                        <span flex="50">{{event.payload.method ? event.payload.method  : 'Unknown' }}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="50">Is Refund:</span>
+                        <span flex="50">{{event.payload.isRefund}}</span>
+                    </div>
+                    <div flex="50">
+                        <span flex="50">Payment Authorization Id:</span>
+                        <span flex="50">{{event.payload.paymentAuthorizationId ? event.payload.paymentAuthorizationId  : 'Unknown' }}</span>
+                    </div>
+                </div>
 
                 <div ng-show="event.payload.isSuccess" layout="row" layout-align="end" flex>
                     <md-button class="md-raised md-primary"
@@ -72,21 +120,75 @@
             </md-card-content>
         </div>
         <div ng-show="event.type === 'REFUND_EVENT';">
-            <md-subheader class="md-no-sticky subheader-bottom-border">Refund Event #{{event.id}}</md-subheader>
+            <md-subheader ng-style="{'background-color':controller.getBackground(event)}" class="md-no-sticky ">
+                #{{event.id}} - {{controller.getName(event)}}
+            </md-subheader>
 
-            <md-card-content>
-                <label>Payload</label>
-                <md-divider></md-divider>
-                <code>{{event.payload}}</code>
+            <md-card-content class="event-content-card">
+                <div class="event-content-card-title">Payload info</div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Payment Id:</div>
+                        <div flex="auto">{{event.payload.id ? event.payload.id  : 'Unknown' }}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Amount:</div>
+                        <div flex="auto">{{event.payload.amount ? event.payload.amount  : 'Unknown' }} {{event.payload.currency}}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Method:</div>
+                        <div flex="auto">{{event.payload.method ? event.payload.method  : 'Unknown' }}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Refund:</div>
+                        <div flex="auto">{{event.payload.isRefund ? event.payload.isRefund  : 'Unknown' }}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Payment Authorization Id:</div>
+                        <div flex="auto">{{event.payload.paymentAuthorizationId ? event.payload.paymentAuthorizationId  : 'Unknown' }}</div>
+                    </div>
+                </div>
             </md-card-content>
         </div>
         <div ng-show="event.type === 'PREAUTH_EVENT';">
-            <md-subheader class="md-no-sticky subheader-bottom-border">Preauth Cart Event #{{event.id}}</md-subheader>
+            <md-subheader ng-style="{'background-color':controller.getBackground(event)}" class="md-no-sticky ">
+                #{{event.id}} - {{controller.getName(event)}}
+            </md-subheader>
 
-            <md-card-content>
-                <label>Payload</label>
-                <md-divider></md-divider>
-                <code>{{event.payload}}</code>
+            <md-card-content class="event-content-card">
+                <div class="event-content-card-title">Payload info</div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Payment Id:</div>
+                        <div flex="auto">{{event.payload.id ? event.payload.id  : 'Unknown' }}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Payment Authorization Id:</div>
+                        <div flex="auto">{{event.payload.id ? event.payload.paymentAuthorizationId  : 'Unknown' }}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">User Id:</div>
+                        <div flex="auto">{{event.payload.userId ? event.payload.userId  : 'Unknown' }}</div>
+                    </div>
+                </div>
+                <div class="info-entry-row">
+                    <div layout="row">
+                        <div flex="nogrow" class="info-entry-row-title">Transaction Id:</div>
+                        <div flex="auto">{{event.payload.transactionId ? event.payload.transactionId  : 'Unknown' }}</div>
+                    </div>
+                </div>
             </md-card-content>
         </div>
     </md-card>

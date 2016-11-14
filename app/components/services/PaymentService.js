@@ -1,11 +1,14 @@
 angular.module('services')
-    .service('PaymentService', ['$http', '$q', PaymentService]);
+    .service('PaymentService', ['$http', PaymentService]);
 
-function PaymentService($http, $q) {
+function PaymentService($http) {
     return {
         preAuthCartRedirect: function(orderCartId) {
             return $http.post('http://localhost:8091/api/v1/payments/preauth/' + orderCartId + "/initRedirect",
-                { returnUrl:"http://127.0.0.1:8080/user", cancelUrl:"http://127.0.0.1:8080/user"});
+                { returnUrl:"http://localhost:9000/#/tester/express_checkout/return", cancelUrl:"http://localhost:9000/#/tester/express_checkout/cancel"});
+        },
+        preAuthCartRedirectFinalize: function () {
+            
         },
         payInvoice: function (invoice) {
             return $http.post('http://localhost:8091/api/v1/payments', invoice);

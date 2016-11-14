@@ -19,57 +19,19 @@
     </style>
 </head>
 
-<body ng-app="app" layout="row" ng-controller="MainController as mainController" ng-cloak>
-    <md-sidenav
-            class="site-sidenav md-sidenav-left md-whiteframe-z2"
-            md-component-id="left"
-            ng-click="controller.toggleAction()"
-            md-is-locked-open="$mdMedia('gt-sm')">
+<body ng-app="app" layout="column" ng-controller="MainController as mainController" ng-cloak>
 
-        <md-toolbar class="md-whiteframe-z1">
-            <h1 class="md-toolbar-tools">Marc-Andre Beaudry</h1>
-        </md-toolbar>
+    <app-toolbar></app-toolbar>
 
-        <md-list flex>
-            <md-list-item class="sidenav-item-sizing" ng-repeat="action in ::mainController.actions" flex layout="row">
-                <div class="sidenav-item-sizing" layout="row" layout-align="stretch stretch" ng-click="mainController.selectedAction(action)">
-                    <md-icon class="sidenav-item-icon">{{action.icon}}</md-icon>
-                    <md-button class="sidenav-item-sizing" >
-                        {{action.name}}
-                    </md-button>
-                </div>
-            </md-list-item>
-        </md-list>
-    </md-sidenav>
+    <div flex layout="row">
+        <app-navbar></app-navbar>
 
-
-    <div flex layout="column" role="main" class="md-whiteframe-z2">
-
-        <md-toolbar layout="row" class="md-whiteframe-z1">
-            <md-button id="main" class="menu" hide-gt-sm ng-click="mainController.toggleList()">
-                <md-icon md-svg-icon="menu"></md-icon>
-            </md-button>
-            <h1 class="md-toolbar-tools">Billing Integration Tester</h1>
-            <md-menu>
-                <md-button aria-label="Settings" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-                    <md-icon md-menu-origin>settings</md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-button ng-click="mainController.loadTestData()">Load test data</md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-        </md-toolbar>
-
-        <md-content class="app-body" flex ng-view>
-
+        <md-content md-whiteframe="2" class="app-body" flex ng-view>
+            <!-- Main Screen goes here -->
         </md-content>
 
     </div>
 </body>
-
-
 
 <script src="node_modules/angular/angular.js"></script>
 <script src="node_modules/angular-aria/angular-aria.js"></script>
@@ -79,14 +41,19 @@
 
 <script src="app/components/main/MainController.js"></script>
 <script src="app/components/services/ServiceRoot.js"></script>
+<script src="app/components/services/EventService.js\"></script>
 <script src="app/components/services/CartService.js"></script>
 <script src="app/components/services/UserService.js"></script>
 <script src="app/components/services/PaymentGatewayService.js"></script>
 <script src="app/components/services/PaymentInstrumentService.js"></script>
 <script src="app/components/services/InvoiceService.js"></script>
 <script src="app/components/services/PaymentService.js"></script>
+<script src="app/components/services/DataService.js"></script>
 <script src="app/components/user/UserController.js"></script>
+<script src="app/components/user/UserPicker.js"></script>
 <script src="app/components/cart/CartController.js"></script>
+<script src="app/components/toolbar/AppToolbar.js"></script>
+<script src="app/components/toolbar/AppNavbar.js"></script>
 <script src="app/components/payment_instrument/PaymentInstrumentController.js"></script>
 <script src="app/components/payment_gateway/PaymentGatewayController.js"></script>
 <script src="app/components/tester/TesterController.js"></script>

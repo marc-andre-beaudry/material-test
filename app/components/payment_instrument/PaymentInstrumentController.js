@@ -2,37 +2,20 @@ angular
     .module('payment_instrument', ['ngMaterial', 'services']);
 angular
     .module('payment_instrument')
-    .controller('PaymentInstrumentController', ['UserService', 'PaymentInstrumentService', '$log', '$q', '$mdDialog',
+    .controller('PaymentInstrumentController', ['PaymentInstrumentService', '$log', '$q', '$mdDialog',
         PaymentInstrumentController
     ]);
 
-function PaymentInstrumentController(UserService, PaymentInstrumentService, $log, $q,  $mdDialog) {
-    var self = this;
-    self.userService = UserService;
-    self.paymentInstrumentService = PaymentInstrumentService;
+function PaymentInstrumentController(PaymentInstrumentService, $log, $q,  $mdDialog) {
+    var vm = this;
+    vm.paymentInstrumentService = PaymentInstrumentService;
 
-    self.users = [];
-    self.selectedUser = undefined;
-
-    self.selectedUserChanged = function () {
-        self.paymentInstrumentService.getDefaultPaymentInstrument('PayflowPro', self.selectedUser.id)
+    vm.selectedUserChanged = function (user) {
+        vm.paymentInstrumentService.getDefaultPaymentInstrument('PayflowPro', user.id)
             .then(function (response) {
-                self.currentPaymentInstrument = response.data;
+                vm.currentPaymentInstrument = response.data;
             }, function (response) {
-                self.currentPaymentInstrument = undefined;
+                vm.currentPaymentInstrument = undefined;
             });
     };
-
-    self.fetchUsers = function () {
-        self.userService.getUsers()
-            .then(function (response) {
-                self.users = response.data;
-                if(self.users.length > 1) {
-                    self.selectedUser = self.users[0];
-                    self.selectedUserChanged();
-                }
-            }, function (response) {
-            });
-    };
-    self.fetchUsers();
 }

@@ -1,17 +1,22 @@
 var app = angular.module(
     'app',
-    ['ngMaterial', 'services', 'main', 'cart', 'user', 'payment_instrument', 'payment_gateway', 'tester', 'ngRoute']
+    ['ngMaterial', 'services', 'main', 'cart', 'user', 'payment_instrument', 'payment_gateway', 'tester', 'toolbar', 'ngRoute']
 );
 
-app.config(function ($mdThemingProvider, $mdIconProvider) {
+app.config(function ($mdThemingProvider, $mdAriaProvider) {
+    let appColorPaletteName = 'appColorPalette';
+    let appAccentPaletteName = 'appAccentPalette';
+    let appColorPaletteExtension = $mdThemingProvider.extendPalette('blue', {
+        '500': '326de6',
+    });
 
-    var defaultPalette = 'indigo';
-    $mdThemingProvider.setDefaultTheme(defaultPalette);
-    $mdThemingProvider
-        .theme(defaultPalette)
-        .primaryPalette(defaultPalette)
-        .accentPalette('blue')
-        .warnPalette('red');
+    $mdThemingProvider.definePalette(appColorPaletteName, appColorPaletteExtension);
+    $mdThemingProvider.definePalette(appAccentPaletteName, appColorPaletteExtension);
+    $mdThemingProvider.theme('default')
+        .primaryPalette(appColorPaletteName)
+        .accentPalette(appAccentPaletteName);
+
+    $mdAriaProvider.disableWarnings();
 });
 
 app.config(['$routeProvider', function ($routeProvider) {
@@ -32,6 +37,14 @@ app.config(['$routeProvider', function ($routeProvider) {
         controller: 'PaymentGatewayController as controller'
     });
     $routeProvider.when('/tester', {
+        templateUrl: 'app/components/tester/TesterView.html',
+        controller: 'TesterController as controller'
+    });
+    $routeProvider.when('/tester/:paymentGateway/return', {
+        templateUrl: 'app/components/tester/TesterView.html',
+        controller: 'TesterController as controller'
+    });
+    $routeProvider.when('/tester/:paymentGateway/cancel', {
         templateUrl: 'app/components/tester/TesterView.html',
         controller: 'TesterController as controller'
     });

@@ -6,15 +6,7 @@
             <md-subheader class="md-no-sticky subheader-bottom-border">User</md-subheader>
 
             <md-card-content>
-                <md-input-container class="md-icon-float md-block test-information-input-container" flex-gt-sm>
-                    <label>User</label>
-                    <md-select flex ng-model="controller.selectedUser" placeholder="User"
-                               ng-change="controller.selectedUserChanged()">
-                        <md-option ng-repeat="user in controller.users" ng-value="user">{{user.firstname}}
-                            {{user.lastname}}
-                        </md-option>
-                    </md-select>
-                </md-input-container>
+                <user-picker on-select="controller.selectedUserChanged(user)"></user-picker>
             </md-card-content>
         </md-card>
 
@@ -26,15 +18,15 @@
             <md-card-content>
                 <div layout="row">
                     <div flex layout="column" layout-align="center end" class="text-center">
-                        <md-button class="md-raised md-primary" ng-click="controller.newOrderCart($event)">New Cart
+                        <md-button class="md-raised md-primary" ng-click="controller.newOrderCart()">New Cart
                         </md-button>
                     </div>
                 </div>
                 <md-list>
                     <md-divider></md-divider>
-                    <md-list-item ng-repeat="cart in controller.orderCarts">
+                    <md-list-item ng-repeat="cart in controller.orderCarts" ng-click="controller.editOrderCart(cart)">
                         <p> {{cart.description}}</p>
-                        <md-icon class="md-secondary" ng-click="controller.editOrderCart($event, cart)">edit</md-icon>
+                        <md-icon class="md-secondary" ng-click="controller.editOrderCart(cart)">edit</md-icon>
                         <md-icon class="md-secondary">delete</md-icon>
                         <md-divider></md-divider>
                     </md-list-item>
@@ -100,7 +92,7 @@
                                 <input ng-model="item.price">
                             </md-input-container>
 
-                            <md-icon class="md-secondary" ng-click="controller.deleteItemFromCurrentCart($event, item)">
+                            <md-icon class="md-secondary" ng-click="controller.deleteItemFromCurrentCart(item)">
                                 delete
                             </md-icon>
 
@@ -109,11 +101,10 @@
                     </md-list>
                 </div>
 
-                <md-divider></md-divider>
                 <div layout="row" layout-align="end" flex>
-                    <md-button class="md-raised md-primary" ng-click="controller.cancelEditOrderCart($event)">Cancel
+                    <md-button class="md-raised" ng-click="controller.cancelEditOrderCart()">Cancel
                     </md-button>
-                    <md-button class="md-raised md-primary" ng-click="controller.confirmEditOrderCart($event)">Update
+                    <md-button class="md-raised md-primary" ng-click="controller.confirmEditOrderCart()">Update
                     </md-button>
                 </div>
             </md-card-content>

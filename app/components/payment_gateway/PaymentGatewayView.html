@@ -4,12 +4,12 @@
         <md-card-content>
             <md-list>
                 <md-divider></md-divider>
-                <md-list-item ng-repeat="gateway in controller.gateways">
+                <md-list-item ng-repeat="gateway in controller.gateways" ng-click="null">
                     <p>{{gateway.name}}</p>
                     <md-chips ng-show="gateway.isConfigured">
                         <md-chip>Configured</md-chip>
                     </md-chips>
-                    <md-divider></md-divider>
+                    <md-divider>
                 </md-list-item>
             </md-list>
         </md-card-content>

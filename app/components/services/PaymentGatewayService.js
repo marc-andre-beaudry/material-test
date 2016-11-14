@@ -1,7 +1,7 @@
 angular.module('services')
-    .service('PaymentGatewayService', ['$http', '$q', PaymentGatewayService]);
+    .service('PaymentGatewayService', ['$http', PaymentGatewayService]);
 
-function PaymentGatewayService($http, $q) {
+function PaymentGatewayService($http) {
     return {
         createPaymentService: function (gatewayConfig) {
             return $http.post('http://localhost:8091/api/v1/paymentServices/' + gatewayConfig.paymentServiceName, gatewayConfig);

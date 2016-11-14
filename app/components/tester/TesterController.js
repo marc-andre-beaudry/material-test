@@ -2,118 +2,167 @@ angular
     .module('tester', ['ngMaterial', 'services']);
 angular
     .module('tester')
-    .controller('TesterController', ['UserService', 'CartService', 'InvoiceService', 'PaymentService', 'PaymentInstrumentService', '$log', '$q', '$mdDialog', '$window',
+    .controller('TesterController', ['CartService', 'InvoiceService', 'PaymentService', 'PaymentInstrumentService', 'EventService', '$routeParams', '$window',
         TesterController
     ]);
 
-function TesterController(UserService, CartService, InvoiceService, PaymentService, PaymentInstrumentService, $log, $q, $mdDialog, $window) {
-    var self = this;
-    self.userService = UserService;
-    self.cartService = CartService;
-    self.invoiceService = InvoiceService;
-    self.paymentService = PaymentService;
-    self.paymentInstrumentService = PaymentInstrumentService;
+function TesterController(CartService, InvoiceService, PaymentService, PaymentInstrumentService, EventService, $routeParams, $window) {
+    var vm = this;
+    vm.routeParams = $routeParams;
+    vm.cartService = CartService;
+    vm.invoiceService = InvoiceService;
+    vm.paymentService = PaymentService;
+    vm.paymentInstrumentService = PaymentInstrumentService;
+    vm.eventService = EventService;
 
-    self.events = [];
-    self.eventId = 0;
+    vm.events = [];
+    vm.eventId = 0;
 
-    self.generateInvoice = function (event) {
-        self.invoiceService.createInvoice(self.selectedOrderCart.id)
+    vm.handleRouteParams = function() {
+        if(routeParams.paymentGateway) {
+
+            var redirectInitPayload = {
+                isSuccess: true
+            };
+            var event = {
+                type: "REDIRECT_INIT_EVENT",
+                payload: JSON.stringify(redirectInitPayload)
+            };
+            vm.eventService.createEvent(event).then(function () {
+                vm.fetchEvents();
+            });
+        }
+    };
+
+    vm.generateInvoice = function () {
+        vm.invoiceService.createInvoice(vm.selectedOrderCart.id)
             .then(function (response) {
+                console.log(response.data);
                 var event = {
-                    id: self.eventId++,
                     type: "INVOICE_EVENT",
-                    payload: response.data
+                    payload: JSON.stringify(response.data)
                 };
-                self.events.push(event);
-            }, function () {
+                vm.eventService.createEvent(event).then(function () {
+                    vm.fetchEvents();
+                });
             });
     };
     
-    self.preAuthCartRedirect = function (event) {
-        self.paymentService.preAuthCartRedirect(self.selectedOrderCart.id)
+    vm.preAuthCartRedirect = function () {
+        vm.paymentService.preAuthCartRedirect(vm.selectedOrderCart.id)
             .then(function (response) {
-                console.log(response);
+                console.log(response.data);
                 if(response.data.redirectUrl) {
-                    console.log('Redirecting');
                     $window.location.href = response.data.redirectUrl;
                 }
-            }, function (response) {
-                console.log(response);
             });
     };
 
-    self.preAuthCart = function (event) {
-        self.paymentService.preAuthCart(self.selectedOrderCart.id)
+    vm.preAuthCart = function () {
+        vm.paymentService.preAuthCart(vm.selectedOrderCart.id)
             .then(function (response) {
+                console.log(response.data);
                 var event = {
-                    id: self.eventId++,
+                    id: vm.eventId++,
                     type: "PREAUTH_EVENT",
-                    payload: response.data
+                    payload: JSON.stringify(response.data)
                 };
-                self.events.push(event);
-            }, function (response) {
+                vm.eventService.createEvent(event).then(function () {
+                    vm.fetchEvents();
+                });
             });
 
     };
 
-    self.payInvoice = function (event, invoiceId) {
-        self.paymentService.payInvoice({id: invoiceId})
+    vm.payInvoice = function (event, invoiceId) {
+        vm.paymentService.payInvoice({id: invoiceId})
             .then(function (response) {
+                console.log(response.data);
                 var event = {
-                    id: self.eventId++,
+                    id: vm.eventId++,
                     type: "PAYMENT_EVENT",
-                    payload: response.data
+                    payload: JSON.stringify(response.data)
                 };
-                self.events.push(event);
-            }, function () {
+                vm.eventService.createEvent(event).then(function () {
+                    vm.fetchEvents();
+                });
             });
     };
 
-    self.refundPayment = function (event, paymentId, invoiceId) {
-        self.paymentService.refundInvoice(paymentId, {id: invoiceId})
+    vm.refundPayment = function (event, paymentId, invoiceId) {
+        vm.paymentService.refundInvoice(paymentId, {id: invoiceId})
             .then(function (response) {
+                console.log(response.data);
                 var event = {
-                    id: self.eventId++,
+                    id: vm.eventId++,
                     type: "REFUND_EVENT",
-                    payload: response.data
+                    payload: JSON.stringify(response.data)
                 };
-                self.events.push(event);
-            }, function () {
+                vm.eventService.createEvent(event).then(function () {
+                    vm.fetchEvents();
+                });
             });
     };
 
-    self.selectedUserChanged = function () {
-        self.cartService.getOrderCartsForUser(self.selectedUser.id)
+    vm.selectedUserChanged = function (user) {
+        vm.selectedUser = user;
+        vm.cartService.getOrderCartsForUser(vm.selectedUser.id)
             .then(function (response) {
-                self.orderCarts = response.data;
-                if(self.orderCarts.length > 1) {
-                    self.selectedOrderCart = self.orderCarts[0];
+                vm.orderCarts = response.data;
+                if(vm.orderCarts.length > 1) {
+                    vm.selectedOrderCart = vm.orderCarts[0];
                 }
             }, function (response) {
-                self.orderCarts = [];
+                vm.orderCarts = [];
             });
-        self.fetchDefaultPaymentInstrument();
+        vm.fetchDefaultPaymentInstrument();
     };
     
-    self.fetchDefaultPaymentInstrument = function () {
-        self.paymentInstrumentService.getDefaultPaymentInstrument("PayflowPro", self.selectedUser.id)
+    vm.fetchDefaultPaymentInstrument = function () {
+        vm.paymentInstrumentService.getDefaultPaymentInstrument("PayflowPro", vm.selectedUser.id)
             .then(function(response) {
-                self.paymentInstruments = [response.data];
-                self.selectedPaymentInstrument = response.data;
+                vm.paymentInstruments = [response.data];
+                vm.selectedPaymentInstrument = response.data;
             });
+    };
+    
+    vm.fetchEvents = function () {
+        vm.eventService.getEvents()
+            .then(function (response) {
+                vm.events= [];
+                response.data.forEach(function(event) {
+                vm.events.push(vm.eventParser(event));
+            });
+        });
+    };
+    
+    vm.eventParser = function (event) {
+        var parsedEvent = {
+            id: event.id,
+            type: event.type,
+            payload: JSON.parse(event.payload)
+        };
+        return parsedEvent;
+    };
+    vm.getBackground = function (event) {
+        if(event.payload.isSuccess === true) {
+            return "#66BB6A";
+        } else  if(event.payload.isSuccess === false) {
+            return "#EF5350";
+        } else {
+            return "";
+        }
     };
 
-    self.fetchUsers = function () {
-        self.userService.getUsers()
-            .then(function (response) {
-                self.users = response.data;
-                if(self.users.length > 1) {
-                    self.selectedUser = self.users[0];
-                    self.selectedUserChanged();
-                }
-            }, function (response) {
-            });
+    vm.getName = function(event) {
+        var str = event.type.replace('_', ' ').toLocaleLowerCase();
+        return str.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
     };
-    self.fetchUsers();
+    
+    vm.getPrettyString = function (str) {
+        str = str.replace('_', ' ').toLocaleLowerCase();
+        return str.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+    };
+
+    vm.fetchEvents();
 }

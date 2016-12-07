@@ -1,0 +1,16 @@
+@import '../../variables';
+
+.app-sidenav {
+    height: 100%;
+    width: 290px;
+    margin-right: 2px;
+}
+
+.app-sidenav-list {
+    height: 100%;
+    padding-top: 0px;
+}
+
+.app-sidenav-list-item-selected {
+   color : $application-palette-color;
+}

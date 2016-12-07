@@ -1,0 +1,36 @@
+@import './variables';
+
+.app-body  {
+  background-color: $background-color;
+}
+
+.test-information-input-container {
+  margin: 18px 0;
+}
+
+md-input-container {
+  margin: 6px 0;
+}
+
+.md-subheader-content {
+  font-size: 18px;
+}
+
+.event-content-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.info-entry-row {
+  margin-bottom: 5px;
+}
+
+.info-entry-row-key {
+  font-weight: 500;
+  margin-right: 6px;
+}
+
+.info-entry-row-value {
+  text-align: right;
+}

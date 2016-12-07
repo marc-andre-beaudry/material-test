@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Billing Integration Tester</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel='stylesheet' href="http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic">
+    <link rel="stylesheet" href="vendor/angular-material/angular-material.min.css"/>
+    <link rel="stylesheet" href="bundle.css"/>
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body ng-app="app" layout="column" ng-cloak>
+
+    <app-toolbar></app-toolbar>
+
+    <div flex layout="row">
+        <app-sidenav></app-sidenav>
+        <div flex layout="column">
+            <md-content class="app-body" flex ng-view><!-- Main Screen goes here --></md-content>
+            <app-bottom-view></app-bottom-view>
+        </div>
+    </div>
+</body>
+
+<script src="vendor/angular/angular.min.js"></script>
+<script src="vendor/angular-aria/angular-aria.min.js"></script>
+<script src="vendor/angular-route/angular-route.min.js"></script>
+<script src="vendor/angular-animate/angular-animate.min.js"></script>
+<script src="vendor/angular-material/angular-material.min.js"></script>
+
+<script src="components/services/ServiceRoot.js"></script>
+<script src="components/services/EventService.js"></script>
+<script src="components/services/CartService.js"></script>
+<script src="components/services/UserService.js"></script>
+<script src="components/services/PaymentGatewayService.js"></script>
+<script src="components/services/PaymentInstrumentService.js"></script>
+<script src="components/services/InvoiceService.js"></script>
+<script src="components/services/PaymentService.js"></script>
+<script src="components/services/DataService.js"></script>
+<script src="components/services/AppLocationService.js"></script>
+<script src="components/user/UserController.js"></script>
+<script src="components/user/UserPicker.js"></script>
+<script src="components/cart/CartController.js"></script>
+<script src="components/navigation/AppToolbar.js"></script>
+<script src="components/navigation/AppSidenav.js"></script>
+<script src="components/bottom_view/AppBottomView.js"></script>
+<script src="components/payment_instrument/PaymentInstrumentController.js"></script>
+<script src="components/payment_gateway/PaymentGatewayController.js"></script>
+<script src="components/tester/TesterController.js"></script>
+<script src="app.js"></script>
+
+</html>

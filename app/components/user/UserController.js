@@ -4,9 +4,8 @@ angular
     .module('user')
     .controller('UserController', ['UserService', UserController]);
 
-function UserController(UserService) {
+function UserController(userService) {
     var vm = this;
-    vm.userService = UserService;
     vm.editMode = "NEW";
     vm.currentUser = undefined;
     vm.users = [];
@@ -24,7 +23,7 @@ function UserController(UserService) {
     };
 
     vm.deleteUser = function (user) {
-        vm.userService.deleteUser(user).then(function (success) {
+        userService.deleteUser(user).then(function () {
             vm.fetchUsers();
         });
     };
@@ -35,18 +34,18 @@ function UserController(UserService) {
 
     vm.confirmEditUser = function () {
         if (vm.editMode == "NEW") {
-            vm.userService.createUser(vm.currentUser).then(function(response) {
+            userService.createUser(vm.currentUser).then(function() {
                 vm.fetchUsers();
             });
         } else if (vm.editMode == "EDIT") {
-            vm.userService.updateUser(vm.currentUser).then(function(response) {
+            userService.updateUser(vm.currentUser).then(function() {
                 vm.fetchUsers();
             });
         }
     };
 
     vm.fetchUsers = function () {
-        vm.userService.getUsers()
+        userService.getUsers()
             .then(function (response) {
                 vm.users = response.data;
                 vm.currentUser = undefined;

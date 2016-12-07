@@ -6,20 +6,14 @@ angular
         TesterController
     ]);
 
-function TesterController(CartService, InvoiceService, PaymentService, PaymentInstrumentService, EventService, $routeParams, $window) {
+function TesterController(cartService, invoiceService, paymentService, paymentInstrumentService, eventService, $routeParams, $window) {
     var vm = this;
-    vm.routeParams = $routeParams;
-    vm.cartService = CartService;
-    vm.invoiceService = InvoiceService;
-    vm.paymentService = PaymentService;
-    vm.paymentInstrumentService = PaymentInstrumentService;
-    vm.eventService = EventService;
 
     vm.events = [];
     vm.eventId = 0;
 
     vm.handleRouteParams = function() {
-        if(routeParams.paymentGateway) {
+        if($routeParams.paymentGateway) {
 
             var redirectInitPayload = {
                 isSuccess: true
@@ -28,28 +22,28 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
                 type: "REDIRECT_INIT_EVENT",
                 payload: JSON.stringify(redirectInitPayload)
             };
-            vm.eventService.createEvent(event).then(function () {
+            eventService.createEvent(event).then(function () {
                 vm.fetchEvents();
             });
         }
     };
 
     vm.generateInvoice = function () {
-        vm.invoiceService.createInvoice(vm.selectedOrderCart.id)
+        invoiceService.createInvoice(vm.selectedOrderCart.id)
             .then(function (response) {
                 console.log(response.data);
                 var event = {
                     type: "INVOICE_EVENT",
                     payload: JSON.stringify(response.data)
                 };
-                vm.eventService.createEvent(event).then(function () {
+                eventService.createEvent(event).then(function () {
                     vm.fetchEvents();
                 });
             });
     };
     
     vm.preAuthCartRedirect = function () {
-        vm.paymentService.preAuthCartRedirect(vm.selectedOrderCart.id)
+        paymentService.preAuthCartRedirect(vm.selectedOrderCart.id)
             .then(function (response) {
                 console.log(response.data);
                 if(response.data.redirectUrl) {
@@ -59,7 +53,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
     };
 
     vm.preAuthCart = function () {
-        vm.paymentService.preAuthCart(vm.selectedOrderCart.id)
+        paymentService.preAuthCart(vm.selectedOrderCart.id)
             .then(function (response) {
                 console.log(response.data);
                 var event = {
@@ -67,7 +61,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
                     type: "PREAUTH_EVENT",
                     payload: JSON.stringify(response.data)
                 };
-                vm.eventService.createEvent(event).then(function () {
+                eventService.createEvent(event).then(function () {
                     vm.fetchEvents();
                 });
             });
@@ -75,7 +69,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
     };
 
     vm.payInvoice = function (event, invoiceId) {
-        vm.paymentService.payInvoice({id: invoiceId})
+        paymentService.payInvoice({id: invoiceId})
             .then(function (response) {
                 console.log(response.data);
                 var event = {
@@ -83,14 +77,14 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
                     type: "PAYMENT_EVENT",
                     payload: JSON.stringify(response.data)
                 };
-                vm.eventService.createEvent(event).then(function () {
+                eventService.createEvent(event).then(function () {
                     vm.fetchEvents();
                 });
             });
     };
 
     vm.refundPayment = function (event, paymentId, invoiceId) {
-        vm.paymentService.refundInvoice(paymentId, {id: invoiceId})
+        paymentService.refundInvoice(paymentId, {id: invoiceId})
             .then(function (response) {
                 console.log(response.data);
                 var event = {
@@ -98,7 +92,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
                     type: "REFUND_EVENT",
                     payload: JSON.stringify(response.data)
                 };
-                vm.eventService.createEvent(event).then(function () {
+                eventService.createEvent(event).then(function () {
                     vm.fetchEvents();
                 });
             });
@@ -106,7 +100,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
 
     vm.selectedUserChanged = function (user) {
         vm.selectedUser = user;
-        vm.cartService.getOrderCartsForUser(vm.selectedUser.id)
+        cartService.getOrderCartsForUser(vm.selectedUser.id)
             .then(function (response) {
                 vm.orderCarts = response.data;
                 if(vm.orderCarts.length > 1) {
@@ -119,7 +113,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
     };
     
     vm.fetchDefaultPaymentInstrument = function () {
-        vm.paymentInstrumentService.getDefaultPaymentInstrument("PayflowPro", vm.selectedUser.id)
+        paymentInstrumentService.getDefaultPaymentInstrument("PayflowPro", vm.selectedUser.id)
             .then(function(response) {
                 vm.paymentInstruments = [response.data];
                 vm.selectedPaymentInstrument = response.data;
@@ -127,7 +121,7 @@ function TesterController(CartService, InvoiceService, PaymentService, PaymentIn
     };
     
     vm.fetchEvents = function () {
-        vm.eventService.getEvents()
+        eventService.getEvents()
             .then(function (response) {
                 vm.events= [];
                 response.data.forEach(function(event) {

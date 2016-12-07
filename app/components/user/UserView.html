@@ -13,7 +13,7 @@
                 <md-list>
                     <md-divider></md-divider>
                     <md-list-item ng-repeat="user in controller.users" ng-click="controller.editUser(user)">
-                        <p> {{ user.firstname }} {{user.lastname}}</p>
+                        <p> {{ user.firstname }} {{user.lastname}} ({{user.email}})</p>
                         <md-icon class="md-secondary" ng-click="controller.editUser(user)">edit</md-icon>
                         <md-icon class="md-secondary" ng-click="controller.deleteUser(user)">delete</md-icon>
                         <md-divider></md-divider>

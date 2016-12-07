@@ -4,9 +4,8 @@ angular
     .module('cart')
     .controller('CartController', ['CartService', CartController]);
 
-function CartController(CartService) {
+function CartController(cartService) {
     var vm = this;
-    vm.cartService = CartService;
 
     vm.selectedUser = undefined;
 
@@ -52,7 +51,7 @@ function CartController(CartService) {
 
     vm.selectedUserChanged = function (user) {
         vm.selectedUser = user;
-        vm.cartService.getOrderCartsForUser(vm.selectedUser.id)
+        cartService.getOrderCartsForUser(vm.selectedUser.id)
             .then(function (response) {
                 vm.orderCarts = response.data;
             });

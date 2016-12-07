@@ -1,0 +1,14 @@
+<md-sidenav
+        class="app-sidenav md-whiteframe-z2"
+        md-component-id="left"
+        md-is-locked-open="$mdMedia('gt-sm')">
+
+    <md-list class="app-sidenav-list">
+        <md-list-item ng-repeat="action in ::$ctrl.actions"
+                      ng-class="{'app-sidenav-list-item-selected': action.isSelected === true}"
+                      ng-click="$ctrl.selectedAction(action)">
+            <md-icon md-menu-origin>{{action.icon}}</md-icon>
+            <p>{{action.name}}</p>
+        </md-list-item>
+    </md-list>
+</md-sidenav>

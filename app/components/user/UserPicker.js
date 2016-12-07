@@ -1,6 +1,6 @@
-function UserPickerController(UserService) {
+function UserPickerController(userService) {
     var vm = this;
-    UserService.getUsers()
+    userService.getUsers()
         .then(function (response) {
             vm.users = response.data;
             if (vm.users.length > 0) {
@@ -15,7 +15,7 @@ function UserPickerController(UserService) {
 }
 
 angular.module('user').component('userPicker', {
-    templateUrl: 'app/components/user/UserPicker.html',
+    templateUrl: 'components/user/UserPicker.html',
     controller: ['UserService', UserPickerController],
     bindings: {
         onSelect: '&'
